@@ -1,28 +1,39 @@
-import React, { useState } from "react";
+import React, { useRef } from 'react';
+import { render } from 'react-dom';
 
-import Button from "../components/Button";
+import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
 
-const text = [
-  "This is the button to press",
-  "Second one",
-  "Third One",
-  "Fourth one",
-  "fith one",
-  "sixth one",
-  "seventh one",
-  "eighth one",
-];
 const MyApp = () => {
-  const [btn, setBtn] = useState("");
-  return (
-    <>
-      <h1>My App</h1>
-      {text.map((text) => {
-        return <Button setBtn={setBtn} text={text} />;
-      })}
-      <h1 className="px-5 text-4xl text-purple-600">{btn}</h1>
-    </>
-  );
-};
+  const emailEditorRef = useRef();
 
-export default MyApp;
+    const exportHtml = () => {
+      const unlayer = emailEditorRef.current?.editor;
+
+      unlayer?.exportHtml((data) => {
+        const { design, html } = data;
+        console.log('exportHtml', html);
+      });
+    };
+
+    const onReady = (unlayer) => {
+      // editor is ready
+      // you can load your template here;
+      // the design json can be obtained by calling
+      // unlayer.loadDesign(callback) or unlayer.exportHtml(callback)
+
+      // const templateJson = { DESIGN JSON GOES HERE };
+      // unlayer.loadDesign(templateJson);
+    };
+
+    return (
+      <div>
+        <div>
+          <button onClick={exportHtml}>Export HTML</button>
+        </div>
+
+        <EmailEditor ref={emailEditorRef} onReady={onReady} />
+      </div>
+    );
+  };
+  
+  export default MyApp;
